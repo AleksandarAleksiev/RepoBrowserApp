@@ -8,7 +8,7 @@ import io.reactivex.disposables.Disposable;
 
 public interface IBasePresenter {
 
-    void stop();
+    void dispose();
 
     void add(Disposable disposable);
 }

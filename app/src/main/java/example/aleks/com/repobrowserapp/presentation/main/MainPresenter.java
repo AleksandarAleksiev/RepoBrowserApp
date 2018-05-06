@@ -2,6 +2,7 @@ package example.aleks.com.repobrowserapp.presentation.main;
 
 import javax.inject.Inject;
 
+import example.aleks.com.repobrowserapp.domain.interactor.authenticate.IAuthenticateInteractor;
 import example.aleks.com.repobrowserapp.presentation.mvp.BasePresenter;
 
 /**
@@ -12,12 +13,18 @@ public class MainPresenter extends BasePresenter implements IMainPresenter{
 
     //region properties
     private final IMainView mainView;
+    private final IMainNavigator mainNavigator;
+    private final IAuthenticateInteractor authenticateInteractor;
     //endregion
 
     //region constructor
     @Inject
-    public MainPresenter(IMainView presenterView) {
-        mainView = presenterView;
+    public MainPresenter(IMainView presenterView,
+                         IMainNavigator navigator,
+                         IAuthenticateInteractor authenticateInteractor) {
+        this.mainView = presenterView;
+        this.mainNavigator = navigator;
+        this.authenticateInteractor = authenticateInteractor;
     }
     //endregion
 
@@ -26,7 +33,14 @@ public class MainPresenter extends BasePresenter implements IMainPresenter{
     @Override
     public void start() {
 
-        mainView.login();
+        final String userAuthToken = authenticateInteractor.getUserAuthToken();
+        if (userAuthToken == null || userAuthToken.isEmpty()) {
+
+            mainView.login();
+        } else {
+
+            mainNavigator.showUserGitRepos();
+        }
     }
 
     //endregion

@@ -12,7 +12,7 @@ public abstract class BasePresenter implements IBasePresenter {
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
-    public void stop() {
+    public void dispose() {
         compositeDisposable.clear();
     }
 

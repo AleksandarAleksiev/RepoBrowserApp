@@ -7,17 +7,14 @@ import android.support.v4.app.Fragment;
 
 import javax.inject.Inject;
 
-import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 import example.aleks.com.repobrowserapp.BuildConfig;
 import example.aleks.com.repobrowserapp.R;
 import example.aleks.com.repobrowserapp.presentation.base.BaseActivity;
-import example.aleks.com.repobrowserapp.presentation.main.IMainPresenter;
-import example.aleks.com.repobrowserapp.presentation.main.IMainView;
 
-public class MainActivity extends BaseActivity implements HasSupportFragmentInjector, IMainView {
+public class MainActivity extends BaseActivity implements HasSupportFragmentInjector, IMainView, IMainNavigator {
 
     //region properties
     @Inject
@@ -32,18 +29,19 @@ public class MainActivity extends BaseActivity implements HasSupportFragmentInje
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mainPresenter.start();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mainPresenter.start();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mainPresenter.stop();
+        mainPresenter.dispose();
     }
 
     //endregion
@@ -64,5 +62,14 @@ public class MainActivity extends BaseActivity implements HasSupportFragmentInje
         final Intent loginIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(loginUrl));
         startActivity(loginIntent);
     }
+    //endregion
+
+    //region IMainNavigator
+
+    @Override
+    public void showUserGitRepos() {
+
+    }
+
     //endregion
 }
