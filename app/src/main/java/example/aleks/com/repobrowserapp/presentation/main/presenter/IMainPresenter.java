@@ -1,4 +1,4 @@
-package example.aleks.com.repobrowserapp.presentation.main;
+package example.aleks.com.repobrowserapp.presentation.main.presenter;
 
 import example.aleks.com.repobrowserapp.presentation.mvp.IBasePresenter;
 
@@ -8,5 +8,5 @@ import example.aleks.com.repobrowserapp.presentation.mvp.IBasePresenter;
 
 public interface IMainPresenter extends IBasePresenter {
 
-    void start();
+    void start(String authCode);
 }

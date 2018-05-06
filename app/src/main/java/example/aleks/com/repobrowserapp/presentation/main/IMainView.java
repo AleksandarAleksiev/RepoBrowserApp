@@ -7,4 +7,6 @@ package example.aleks.com.repobrowserapp.presentation.main;
 public interface IMainView {
 
     void login();
+
+    void loading(boolean isLoading);
 }

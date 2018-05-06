@@ -1,5 +1,7 @@
 package example.aleks.com.repobrowserapp.di.component;
 
+import javax.inject.Singleton;
+
 import dagger.BindsInstance;
 import dagger.Component;
 import dagger.android.support.AndroidSupportInjectionModule;
@@ -12,6 +14,7 @@ import example.aleks.com.repobrowserapp.di.module.NetworkModule;
  * Created by aleks on 05/05/2018.
  */
 
+@Singleton
 @Component(modules = {AndroidSupportInjectionModule.class, AppModule.class, NetworkModule.class, BuildModule.class})
 public interface AppComponent {
 

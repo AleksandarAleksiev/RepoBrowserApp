@@ -3,6 +3,8 @@ package example.aleks.com.repobrowserapp;
 import android.app.Activity;
 import android.app.Application;
 
+import java.io.File;
+
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
@@ -27,7 +29,7 @@ public class RepoBrowserApp extends Application implements HasActivityInjector {
         DaggerAppComponent
                 .builder()
                 .application(this)
-                .network(new NetworkModule())
+                .network(new NetworkModule(new File(getCacheDir(), "responses")))
                 .build().inject(this);
     }
 

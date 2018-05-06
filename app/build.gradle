@@ -14,6 +14,8 @@ android {
         buildConfigField "String", "CLIENT_ID", "\"7b699a882ad401342db7\""
         buildConfigField "String", "CLIENT_SECRET", "\"758d0be63374382fde7e5dbe3146d273eafe385a\""
         buildConfigField "String", "REDIRECT_URI", "\"repobrowse://callback\""
+        buildConfigField "String", "BASEURL", "\"https://api.github.com/\""
+        buildConfigField "int", "CACHETIME", "600"
     }
     buildTypes {
         release {

@@ -13,6 +13,7 @@ import dagger.android.support.HasSupportFragmentInjector;
 import example.aleks.com.repobrowserapp.BuildConfig;
 import example.aleks.com.repobrowserapp.R;
 import example.aleks.com.repobrowserapp.presentation.base.BaseActivity;
+import example.aleks.com.repobrowserapp.presentation.main.presenter.IMainPresenter;
 
 public class MainActivity extends BaseActivity implements HasSupportFragmentInjector, IMainView, IMainNavigator {
 
@@ -29,13 +30,14 @@ public class MainActivity extends BaseActivity implements HasSupportFragmentInje
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mainPresenter.start();
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+
+        super.onResume();
+
+        validateUserAuthCode();
     }
 
     @Override
@@ -62,6 +64,12 @@ public class MainActivity extends BaseActivity implements HasSupportFragmentInje
         final Intent loginIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(loginUrl));
         startActivity(loginIntent);
     }
+
+    @Override
+    public void loading(boolean isLoading) {
+
+    }
+
     //endregion
 
     //region IMainNavigator
@@ -71,5 +79,23 @@ public class MainActivity extends BaseActivity implements HasSupportFragmentInje
 
     }
 
+    //endregion
+
+    //region private methods
+    private void validateUserAuthCode() {
+
+        String authCode = null;
+        final Intent intent = getIntent();
+        if (intent != null && intent.getData() != null) {
+
+            final Uri callbackUri = intent.getData();
+            if (callbackUri.toString().startsWith(BuildConfig.REDIRECT_URI)) {
+
+                authCode = callbackUri.getQueryParameter("code");
+            }
+        }
+
+        mainPresenter.start(authCode);
+    }
     //endregion
 }
