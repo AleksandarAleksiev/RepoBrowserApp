@@ -42,7 +42,7 @@ public class LocalStorageRepository implements ILocalStorageRepository {
 
     //region properties
     private static final String TAG = LocalStorageRepository.class.getSimpleName();
-    private static final String userRepositoriesCacheFile = TAG + "_movies.json";
+    private static final String userRepositoriesCacheFile = TAG + "_repositories.json";
     //endregion
 
     //region ILocalStorageRepository implementation

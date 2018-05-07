@@ -14,9 +14,9 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 import example.aleks.com.repobrowserapp.BuildConfig;
 import example.aleks.com.repobrowserapp.R;
-import example.aleks.com.repobrowserapp.domain.repository.user.git.IUserGitReposRepository;
 import example.aleks.com.repobrowserapp.presentation.base.BaseActivity;
 import example.aleks.com.repobrowserapp.presentation.main.presenter.IMainPresenter;
+import example.aleks.com.repobrowserapp.presentation.user.repoistories.UserRepositoriesFragment;
 
 public class MainActivity extends BaseActivity implements HasSupportFragmentInjector, IMainView, IMainNavigator {
 
@@ -26,9 +26,6 @@ public class MainActivity extends BaseActivity implements HasSupportFragmentInje
 
     @Inject
     public IMainPresenter mainPresenter;
-
-    @Inject
-    public IUserGitReposRepository test;
     //endregion
 
     //region activity methods
@@ -83,6 +80,13 @@ public class MainActivity extends BaseActivity implements HasSupportFragmentInje
     @Override
     public void showUserGitRepos() {
 
+        Fragment userRepositories = getSupportFragmentManager().findFragmentByTag(UserRepositoriesFragment.TAG);
+        if (userRepositories == null) {
+
+            userRepositories = UserRepositoriesFragment.newInstance();
+        }
+
+        showScreen(userRepositories, UserRepositoriesFragment.TAG, false, false);
     }
 
     //endregion

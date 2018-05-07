@@ -60,12 +60,6 @@ public class AppModule {
     }
 
     @Provides
-    IUserGitReposRepository providesUserGitReposRepository(UserGitReposRepository userGitReposRepository) {
-
-        return userGitReposRepository;
-    }
-
-    @Provides
     ILocalStorageRepository providesLocalStorageRepository(@AppContext Context context, Gson gson) {
 
         return new LocalStorageRepository(context.getCacheDir(), gson);

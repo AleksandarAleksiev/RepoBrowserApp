@@ -15,13 +15,7 @@ import javax.inject.Provider;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
-    private final Map<Class<? extends ViewModel>, Provider<? extends ViewModel>> creators;
-
-    @Inject
-    public ViewModelFactory(Map<Class<? extends ViewModel>, Provider<? extends ViewModel>> viewModelMap) {
-
-        this.creators = viewModelMap;
-    }
+    private final Map<Class<? extends ViewModel>, Provider<ViewModel>> creators;
 
     @NonNull
     @Override
@@ -30,7 +24,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         Provider<? extends ViewModel> creator = creators.get(modelClass);;
         if (creator == null) {
 
-            for (Map.Entry<Class<? extends ViewModel>, Provider<? extends ViewModel>> entry : creators.entrySet()) {
+            for (Map.Entry<Class<? extends ViewModel>, Provider<ViewModel>> entry : creators.entrySet()) {
                 if (modelClass.isAssignableFrom(entry.getKey())) {
                     creator = entry.getValue();
                     break;
@@ -47,5 +41,11 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Inject
+    public ViewModelFactory(Map<Class<? extends ViewModel>, Provider<ViewModel>> viewModelMap) {
+
+        this.creators = viewModelMap;
     }
 }
