@@ -60,7 +60,7 @@ public class MainPresenterTest {
                 emitter.onComplete();
             }
         })).when(authenticateInteractor).getUserAuthToken();
-        mainPresenter.start(null);
+        mainPresenter.start(null, null);
         testScheduler.triggerActions();
 
         Mockito.verify(mainView, Mockito.times(1)).login();
@@ -76,7 +76,7 @@ public class MainPresenterTest {
                 emitter.onSuccess("FAKE");
             }
         })).when(authenticateInteractor).getUserAuthToken();
-        mainPresenter.start(null);
+        mainPresenter.start("FAKE", "CODE");
         testScheduler.triggerActions();
 
         Mockito.verify(mainView, Mockito.times(0)).login();

@@ -11,9 +11,14 @@ import example.aleks.com.repobrowserapp.domain.models.UserRepositories;
 import example.aleks.com.repobrowserapp.domain.models.UserRepository;
 import example.aleks.com.repobrowserapp.domain.repository.local.storage.ILocalStorageRepository;
 import example.aleks.com.repobrowserapp.domain.repository.user.git.IUserGitReposRepository;
-import io.reactivex.Maybe;
+import io.reactivex.Completable;
+import io.reactivex.CompletableEmitter;
+import io.reactivex.CompletableOnSubscribe;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
+import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 /**
  * Created by aleks on 06/05/2018.
@@ -33,41 +38,8 @@ public class UserRepositoriesInteractor implements IUserRepositoriesInteractor {
     }
 
     @Override
-    public Single<UserRepositories> requestUserRepositories(final int page) {
-        return userGitReposRepository.getUserRepositories()
-                .map(new Function<List<GitHubUserRepo>, UserRepositories>() {
-                    @Override
-                    public UserRepositories apply(List<GitHubUserRepo> gitHubUserRepos) throws Exception {
-
-                        final List<UserRepository> repositories = new ArrayList<>();
-                        for (final GitHubUserRepo gitHubUserRepo : gitHubUserRepos) {
-
-                            if (gitHubUserRepo != null) {
-
-                                final User user = new User();
-                                if (gitHubUserRepo.getGitHubUser() != null) {
-
-                                    user.setUserId(gitHubUserRepo.getGitHubUser().getUserId());
-                                    user.setUserName(gitHubUserRepo.getGitHubUser().getUserName());
-                                    user.setUserAvatar(gitHubUserRepo.getGitHubUser().getUserAvatar());
-                                }
-
-                                final UserRepository userRepository = new UserRepository();
-                                userRepository.setRepoId(gitHubUserRepo.getRepoId());
-                                userRepository.setRepoName(gitHubUserRepo.getRepoName());
-                                userRepository.setRepoFullName(gitHubUserRepo.getRepoFullName());
-                                userRepository.setUser(user);
-                                repositories.add(userRepository);
-                            }
-                        }
-                        final UserRepositories userRepositories = new UserRepositories();
-                        userRepositories.setPage(page);
-                        userRepositories.setTotalPages(1);
-                        userRepositories.setUserRepositories(repositories);
-
-                        return userRepositories;
-                    }
-                });
+    public Single<UserRepositories> getUserRepositories() {
+        return loadUserRepos().first(UserRepositories.empty());
     }
 
     @Override
@@ -97,7 +69,71 @@ public class UserRepositoriesInteractor implements IUserRepositoriesInteractor {
     }
 
     @Override
-    public Maybe<UserRepositories> getCachedRepositories() {
-        return localStorageRepository.getUserRepositoriesFromCache();
+    public Completable purgeCache() {
+
+        return Completable.create(new CompletableOnSubscribe() {
+            @Override
+            public void subscribe(CompletableEmitter emitter) throws Exception {
+
+                if (!emitter.isDisposed()) {
+
+                    localStorageRepository.dropUserRepositoriesCache();
+                    emitter.onComplete();
+                }
+            }
+        });
     }
+
+    //region private methods
+    private Flowable<UserRepositories> loadUserRepos() {
+
+        return localStorageRepository.getUserRepositoriesFromCache()
+                .concatWith(getUserRepositoriesFromServer())
+                .filter(new Predicate<UserRepositories>() {
+                    @Override
+                    public boolean test(UserRepositories userRepositories) throws Exception {
+                        return userRepositories != null
+                                && userRepositories.getUserRepositories() != null
+                                && !userRepositories.getUserRepositories().isEmpty();
+                    }
+                });
+    }
+
+    private Single<UserRepositories> getUserRepositoriesFromServer() {
+
+        return userGitReposRepository.getUserRepositories()
+                .flatMap(new Function<List<GitHubUserRepo>, SingleSource<UserRepositories>>() {
+                    @Override
+                    public SingleSource<UserRepositories> apply(List<GitHubUserRepo> gitHubUserRepos) throws Exception {
+
+                        final List<UserRepository> repositories = new ArrayList<>();
+                        for (final GitHubUserRepo gitHubUserRepo : gitHubUserRepos) {
+
+                            if (gitHubUserRepo != null) {
+
+                                final User user = new User();
+                                if (gitHubUserRepo.getGitHubUser() != null) {
+
+                                    user.setUserId(gitHubUserRepo.getGitHubUser().getUserId());
+                                    user.setUserName(gitHubUserRepo.getGitHubUser().getUserName());
+                                    user.setUserAvatar(gitHubUserRepo.getGitHubUser().getUserAvatar());
+                                }
+
+                                final UserRepository userRepository = new UserRepository();
+                                userRepository.setRepoId(gitHubUserRepo.getRepoId());
+                                userRepository.setRepoName(gitHubUserRepo.getRepoName());
+                                userRepository.setRepoFullName(gitHubUserRepo.getRepoFullName());
+                                userRepository.setUser(user);
+                                repositories.add(userRepository);
+                            }
+                        }
+                        final UserRepositories userRepositories = new UserRepositories();
+                        userRepositories.setUserRepositories(repositories);
+
+                        return localStorageRepository.addUserRepositoriesToCache(userRepositories);
+                    }
+                });
+    }
+
+    //endregion
 }

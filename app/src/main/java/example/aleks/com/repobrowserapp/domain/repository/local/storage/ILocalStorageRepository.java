@@ -10,7 +10,7 @@ import io.reactivex.Single;
 
 public interface ILocalStorageRepository {
 
-    void addUserRepositoriesToCache(UserRepositories userRepositories);
     void dropUserRepositoriesCache();
-    Maybe<UserRepositories> getUserRepositoriesFromCache();
+    Single<UserRepositories> getUserRepositoriesFromCache();
+    Single<UserRepositories> addUserRepositoriesToCache(UserRepositories userRepositories);
 }

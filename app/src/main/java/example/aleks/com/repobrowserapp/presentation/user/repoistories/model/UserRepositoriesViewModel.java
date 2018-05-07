@@ -8,6 +8,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import example.aleks.com.repobrowserapp.presentation.main.IMainNavigator;
+import example.aleks.com.repobrowserapp.presentation.user.repoistories.presenter.IUserRepositoriesPresenter;
+
 /**
  * Created by aleks on 07/05/2018.
  */
@@ -16,41 +19,33 @@ public class UserRepositoriesViewModel extends ViewModel {
 
     @NonNull
     private final List<RepositoryItem> repositoryItem = new ArrayList<>();
-    private int page;
-    private int total;
-    private boolean isRefresh;
+    private final IUserRepositoriesPresenter userRepositoriesPresenter;
+    private final IMainNavigator mainNavigator;
 
     @Inject
-    public UserRepositoriesViewModel() {
+    public UserRepositoriesViewModel(IUserRepositoriesPresenter userRepositoriesPresenter,
+                                     IMainNavigator mainNavigator) {
 
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
-    }
-
-    public boolean isRefresh() {
-        return isRefresh;
-    }
-
-    public void setRefresh(boolean refresh) {
-        isRefresh = refresh;
+        this.userRepositoriesPresenter = userRepositoriesPresenter;
+        this.mainNavigator = mainNavigator;
     }
 
     @NonNull
     public List<RepositoryItem> getRepositoryItem() {
         return repositoryItem;
+    }
+
+    public void loadUserRepositories(boolean refresh) {
+
+        userRepositoriesPresenter.loadUserRepositories(refresh);
+    }
+
+    public void viewRepoDetails(RepositoryItem repositoryItem) {
+
+        mainNavigator.showRepositoryDetails(repositoryItem.getOwnerName(), repositoryItem.getRepositoryTitle());
+    }
+
+    public void dispose() {
+        userRepositoriesPresenter.dispose();
     }
 }

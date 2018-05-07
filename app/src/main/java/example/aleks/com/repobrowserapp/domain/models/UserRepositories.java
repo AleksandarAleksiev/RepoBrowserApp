@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -11,12 +12,6 @@ import java.util.List;
  */
 
 public class UserRepositories {
-
-    @SerializedName("page")
-    private int page;
-
-    @SerializedName("total")
-    private int totalPages;
 
     @SerializedName("repositories")
     private List<UserRepository> userRepositories;
@@ -30,19 +25,10 @@ public class UserRepositories {
         this.userRepositories = userRepositories;
     }
 
-    public int getPage() {
-        return page;
-    }
+    public static UserRepositories empty() {
 
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getTotalPages() {
-        return totalPages;
-    }
-
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
+        final UserRepositories emptyData = new UserRepositories();
+        emptyData.setUserRepositories(Collections.<UserRepository>emptyList());
+        return emptyData;
     }
 }

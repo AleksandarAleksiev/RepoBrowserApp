@@ -7,4 +7,6 @@ package example.aleks.com.repobrowserapp.presentation.main;
 public interface IMainNavigator {
 
     void showUserGitRepos();
+
+    void showRepositoryDetails(String ownerName, String repositoryName);
 }

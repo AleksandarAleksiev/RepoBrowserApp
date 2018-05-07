@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +20,9 @@ import example.aleks.com.repobrowserapp.R;
 import example.aleks.com.repobrowserapp.presentation.base.BaseFragment;
 import example.aleks.com.repobrowserapp.presentation.model.ViewModelFactory;
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.adapter.UserRepositoriesAdapter;
-import example.aleks.com.repobrowserapp.presentation.user.repoistories.model.RepositoriesViewState;
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.model.RepositoryItem;
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.model.UserRepositoriesViewModel;
-import example.aleks.com.repobrowserapp.presentation.user.repoistories.presenter.IUserRepositoriesPresenter;
+import example.aleks.com.repobrowserapp.utils.RecyclerViewItemsSpaceDecoration;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,9 +31,6 @@ public class UserRepositoriesFragment extends BaseFragment implements IUserRepos
 
     //region properties
     public static final String TAG = UserRepositoriesFragment.class.getSimpleName();
-
-    @Inject
-    IUserRepositoriesPresenter userRepositoriesPresenter;
 
     @Inject
     ViewModelFactory viewModelFactory;
@@ -83,11 +77,14 @@ public class UserRepositoriesFragment extends BaseFragment implements IUserRepos
             @Override
             public void onRefresh() {
 
-                userRepositoriesPresenter.loadUserRepositories(new RepositoriesViewState(userRepositoriesViewModel.getRepositoryItem(), userRepositoriesViewModel.getPage(), true));
+                userRepositoriesViewModel.loadUserRepositories(true);
             }
         });
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
+        final int margin = getResources().getDimensionPixelSize(R.dimen.recycler_view_item_margin);
+
+        recyclerView.addItemDecoration(new RecyclerViewItemsSpaceDecoration(margin, margin, margin, margin));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.span_count)));
         recyclerView.setAdapter(userRepositoriesAdapter);
 
         return rootView;
@@ -97,14 +94,14 @@ public class UserRepositoriesFragment extends BaseFragment implements IUserRepos
     public void onResume() {
         super.onResume();
 
-        userRepositoriesPresenter.loadUserRepositories(new RepositoriesViewState(userRepositoriesViewModel.getRepositoryItem(), userRepositoriesViewModel.getPage(), false));
+        userRepositoriesViewModel.loadUserRepositories(false);
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        userRepositoriesPresenter.dispose();
+        userRepositoriesViewModel.dispose();
     }
 
     //endregion
@@ -118,7 +115,7 @@ public class UserRepositoriesFragment extends BaseFragment implements IUserRepos
     }
 
     @Override
-    public void update(List<RepositoryItem> userRepositories, int loadedPage, int totalPages) {
+    public void update(List<RepositoryItem> userRepositories) {
 
         userRepositoriesViewModel.getRepositoryItem().clear();
         userRepositoriesViewModel.getRepositoryItem().addAll(userRepositories);

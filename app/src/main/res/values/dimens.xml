@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="recycler_view_item_margin">10dp</dimen>
     <dimen name="repo_item_title_start">10dp</dimen>
     <dimen name="repo_item_author_top">10dp</dimen>
 

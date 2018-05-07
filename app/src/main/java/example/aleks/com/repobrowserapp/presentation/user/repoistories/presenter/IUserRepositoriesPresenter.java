@@ -9,5 +9,5 @@ import example.aleks.com.repobrowserapp.presentation.user.repoistories.model.Rep
 
 public interface IUserRepositoriesPresenter extends IBasePresenter {
 
-    void loadUserRepositories(final RepositoriesViewState viewState);
+    void loadUserRepositories(boolean refresh);
 }

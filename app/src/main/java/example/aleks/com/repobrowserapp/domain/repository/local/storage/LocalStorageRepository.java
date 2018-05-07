@@ -14,13 +14,14 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
 import example.aleks.com.repobrowserapp.domain.models.UserRepositories;
-import io.reactivex.Maybe;
-import io.reactivex.MaybeEmitter;
-import io.reactivex.MaybeOnSubscribe;
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
 
 /**
  * Created by aleks on 06/05/2018.
@@ -47,24 +48,31 @@ public class LocalStorageRepository implements ILocalStorageRepository {
 
     //region ILocalStorageRepository implementation
     @Override
-    public void addUserRepositoriesToCache(UserRepositories userRepositories) {
+    public Single<UserRepositories> addUserRepositoriesToCache(final UserRepositories userRepositories) {
 
-        try {
+        return Single.fromCallable(new Callable<UserRepositories>() {
+            @Override
+            public UserRepositories call() throws Exception {
+                try {
 
-            saveObjectToFile(userRepositories, UserRepositories.class, userRepositoriesCacheFile);
-        } catch (Exception ex) {
+                    saveObjectToFile(userRepositories, UserRepositories.class, userRepositoriesCacheFile);
+                } catch (Exception ex) {
 
-            ex.printStackTrace();
-        }
+                    ex.printStackTrace();
+                }
+
+                return userRepositories;
+            }
+        });
     }
 
     @Override
-    public Maybe<UserRepositories> getUserRepositoriesFromCache() {
+    public Single<UserRepositories> getUserRepositoriesFromCache() {
 
-        return Maybe.create(new MaybeOnSubscribe<UserRepositories>() {
+        return Single.create(new SingleOnSubscribe<UserRepositories>() {
 
             @Override
-            public void subscribe(MaybeEmitter<UserRepositories> emitter) throws Exception {
+            public void subscribe(SingleEmitter<UserRepositories> emitter) throws Exception {
 
                 UserRepositories repositories = null;
 
@@ -80,7 +88,7 @@ public class LocalStorageRepository implements ILocalStorageRepository {
                 if (!emitter.isDisposed()) {
 
                     if (repositories == null) {
-                        emitter.onComplete();
+                        emitter.onSuccess(UserRepositories.empty());
                     } else {
                         emitter.onSuccess(repositories);
                     }

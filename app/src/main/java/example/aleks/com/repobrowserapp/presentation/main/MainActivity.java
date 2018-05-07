@@ -16,6 +16,7 @@ import example.aleks.com.repobrowserapp.BuildConfig;
 import example.aleks.com.repobrowserapp.R;
 import example.aleks.com.repobrowserapp.presentation.base.BaseActivity;
 import example.aleks.com.repobrowserapp.presentation.main.presenter.IMainPresenter;
+import example.aleks.com.repobrowserapp.presentation.repository.details.UserRepositoryDetailsFragment;
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.UserRepositoriesFragment;
 
 public class MainActivity extends BaseActivity implements HasSupportFragmentInjector, IMainView, IMainNavigator {
@@ -87,6 +88,18 @@ public class MainActivity extends BaseActivity implements HasSupportFragmentInje
         }
 
         showScreen(userRepositories, UserRepositoriesFragment.TAG, false, false);
+    }
+
+    @Override
+    public void showRepositoryDetails(String ownerName, String repositoryName) {
+
+        Fragment userRepositoryDetails = getSupportFragmentManager().findFragmentByTag(UserRepositoryDetailsFragment.TAG);
+        if (userRepositoryDetails == null) {
+
+            userRepositoryDetails = UserRepositoryDetailsFragment.newInstance(ownerName, repositoryName);
+        }
+
+        showScreen(userRepositoryDetails, UserRepositoriesFragment.TAG, true, true);
     }
 
     //endregion

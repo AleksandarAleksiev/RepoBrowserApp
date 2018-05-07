@@ -22,6 +22,9 @@ public class UserRepository {
     @SerializedName("owner")
     private User user;
 
+    @SerializedName("language")
+    private String language;
+
     public long getRepoId() {
         return repoId;
     }
@@ -55,5 +58,14 @@ public class UserRepository {
 
     public void setUser(@Nullable User gitHubUser) {
         this.user = gitHubUser;
+    }
+
+    public void setLanguage(@Nullable String language) {
+        this.language = language;
+    }
+
+    @Nullable
+    public String getLanguage() {
+        return language;
     }
 }

@@ -10,14 +10,10 @@ import example.aleks.com.repobrowserapp.domain.models.UserRepositories;
 import example.aleks.com.repobrowserapp.domain.models.UserRepository;
 import example.aleks.com.repobrowserapp.presentation.mvp.BasePresenter;
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.IUserRepositoriesView;
-import example.aleks.com.repobrowserapp.presentation.user.repoistories.model.RepositoriesViewState;
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.model.RepositoryItem;
 import example.aleks.com.repobrowserapp.utils.ISchedulersProvider;
-import io.reactivex.Maybe;
-import io.reactivex.MaybeSource;
-import io.reactivex.Single;
-import io.reactivex.SingleSource;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
@@ -42,11 +38,42 @@ public class UserRepositoriesPresenter extends BasePresenter implements IUserRep
     }
 
     //region IPhotosPresenter photos presenter
-    public void loadUserRepositories(final RepositoriesViewState viewState) {
+    @Override
+    public void loadUserRepositories(boolean refresh) {
 
         userRepositoriesView.loading(true);
 
-        final Disposable disposable = requestRepositories(viewState)
+        final Disposable disposable;
+        if (refresh) {
+            disposable = userRepositoriesInteractor.purgeCache()
+                    .subscribeOn(schedulersProvider.ioScheduler())
+                    .observeOn(schedulersProvider.uiScheduler())
+                    .subscribe(new Action() {
+                        @Override
+                        public void run() throws Exception {
+
+                            add(getUserRepositories());
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+
+                            userRepositoriesView.loading(false);
+                        }
+                    });
+        } else {
+
+            disposable = getUserRepositories();
+        }
+
+        add(disposable);
+    }
+    //endregion
+
+    //region private methods
+    private Disposable getUserRepositories() {
+
+        return userRepositoriesInteractor.getUserRepositories()
                 .map(new Function<UserRepositories, List<RepositoryItem>>() {
                     @Override
                     public List<RepositoryItem> apply(UserRepositories userRepositories) throws Exception {
@@ -54,10 +81,21 @@ public class UserRepositoriesPresenter extends BasePresenter implements IUserRep
                         final List<RepositoryItem> repositoryItems = new ArrayList<>();
                         for (final UserRepository userRepo : userRepositories.getUserRepositories()) {
 
-                            final String avatar = userRepo.getUser() == null ? null : userRepo.getUser().getUserAvatar();
+                            final String avatar;
+                            final String userName;
+                            if (userRepo.getUser() != null) {
+
+                                avatar = userRepo.getUser().getUserAvatar();
+                                userName = userRepo.getUser().getUserName();
+                            } else {
+
+                                avatar = null;
+                                userName = null;
+                            }
                             final RepositoryItem repositoryItem = new RepositoryItem(userRepo.getRepoId(),
                                     userRepo.getRepoName(),
                                     userRepo.getRepoFullName(),
+                                    userName,
                                     avatar);
                             repositoryItems.add(repositoryItem);
                         }
@@ -72,7 +110,7 @@ public class UserRepositoriesPresenter extends BasePresenter implements IUserRep
                     public void accept(List<RepositoryItem> userRepositories) throws Exception {
 
                         userRepositoriesView.loading(false);
-                        userRepositoriesView.update(userRepositories, 1, 1);
+                        userRepositoriesView.update(userRepositories);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -81,51 +119,6 @@ public class UserRepositoriesPresenter extends BasePresenter implements IUserRep
                         userRepositoriesView.loading(false);
                     }
                 });
-
-        add(disposable);
-    }
-    //endregion
-
-    //region private methods
-    private Single<UserRepositories> loadUserRepos(final RepositoriesViewState viewState) {
-
-        Single<UserRepositories> repositoriesSingle;
-
-        if (viewState.getRepositoryItem().isEmpty() && !viewState.isRefresh()) {
-
-            repositoriesSingle = loadCachedRepositories()
-                    .flatMap(new Function<UserRepositories, MaybeSource<UserRepositories>>() {
-                        @Override
-                        public MaybeSource<UserRepositories> apply(UserRepositories userRepositories) throws Exception {
-
-                            Maybe<UserRepositories> userRepositoriesSingle;
-
-                            if (userRepositories.getUserRepositories() == null || userRepositories.getUserRepositories().isEmpty()) {
-
-                                userRepositoriesSingle = requestRepositories(viewState).toMaybe();
-                            } else {
-
-                                userRepositoriesSingle = Maybe.just(userRepositories);
-                            }
-                            return userRepositoriesSingle;
-                        }
-                    }).toSingle();
-        } else {
-
-            repositoriesSingle = requestRepositories(viewState);
-        }
-
-        return repositoriesSingle;
-    }
-
-    private Single<UserRepositories> requestRepositories(RepositoriesViewState viewState) {
-
-        return userRepositoriesInteractor.requestUserRepositories(viewState.getPage());
-    }
-
-    private Maybe<UserRepositories> loadCachedRepositories() {
-
-        return userRepositoriesInteractor.getCachedRepositories();
     }
     //endregion
 }

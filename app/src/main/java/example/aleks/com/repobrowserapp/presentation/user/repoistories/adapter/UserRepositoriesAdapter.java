@@ -37,8 +37,22 @@ public class UserRepositoriesAdapter extends RecyclerView.Adapter<UserRepositori
 
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         final View itemView = inflater.inflate(R.layout.layout_user_repository, parent, false);
+        final RepositoryViewHolder viewHolder = new RepositoryViewHolder(itemView);
 
-        return new RepositoryViewHolder(itemView);
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final int position = viewHolder.getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+
+                    final RepositoryItem repositoryItem = userRepositoriesViewModel.getRepositoryItem().get(position);
+                    userRepositoriesViewModel.viewRepoDetails(repositoryItem);
+                }
+            }
+        });
+
+        return viewHolder;
     }
 
     @Override

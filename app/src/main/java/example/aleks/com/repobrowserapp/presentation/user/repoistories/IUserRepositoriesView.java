@@ -12,5 +12,5 @@ public interface IUserRepositoriesView {
 
     void loading(boolean isLoading);
 
-    void update(List<RepositoryItem> userRepositories, int loadedPage, int totalPages);
+    void update(List<RepositoryItem> userRepositories);
 }

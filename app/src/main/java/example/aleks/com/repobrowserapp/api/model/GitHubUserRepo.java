@@ -19,6 +19,9 @@ public class GitHubUserRepo {
     @SerializedName("full_name")
     private String repoFullName;
 
+    @SerializedName("language")
+    private String language;
+
     @SerializedName("owner")
     private GitHubUser gitHubUser;
 
@@ -55,5 +58,13 @@ public class GitHubUserRepo {
 
     public void setGitHubUser(@Nullable GitHubUser gitHubUser) {
         this.gitHubUser = gitHubUser;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }
