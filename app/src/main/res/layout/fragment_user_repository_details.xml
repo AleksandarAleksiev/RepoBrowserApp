@@ -1,0 +1,71 @@
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeToRefreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/repositoryDetailsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                xmlns:app="http://schemas.android.com/apk/res-auto">
+
+                <android.support.constraint.Guideline
+                    android:id="@+id/topHorizontalGuideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.01"/>
+
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/repositoryTitleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    style="@style/TitleStyle"
+                    android:gravity="center"
+                    app:autoSizeMinTextSize="@dimen/min_title_text_size"
+                    app:autoSizeMaxTextSize="44sp"
+                    app:autoSizeTextType="uniform"
+                    app:layout_constraintStart_toEndOf="@+id/ownerAvatarImageView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/topHorizontalGuideline"
+                    app:layout_constraintDimensionRatio="H,5:1"
+                    tools:text="@tools:sample/full_names"/>
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/ownerAvatarImageView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintWidth_default="percent"
+                    app:layout_constraintWidth_percent="0.3"
+                    app:layout_constraintDimensionRatio="H,1:1"
+                    tools:src="@tools:sample/backgrounds/scenic"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+        </ScrollView>
+
+        <include
+            android:id="@+id/errorMessageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/layout_error_message"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+</android.support.v4.widget.SwipeRefreshLayout>

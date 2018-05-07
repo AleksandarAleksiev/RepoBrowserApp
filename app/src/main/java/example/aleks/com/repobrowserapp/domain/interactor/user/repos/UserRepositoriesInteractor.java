@@ -71,6 +71,32 @@ public class UserRepositoriesInteractor implements IUserRepositoriesInteractor {
     }
 
     @Override
+    public Single<UserRepository> getUserRepositoryDetails(String userName, String repositoryName) {
+        return userGitReposRepository.getUserRepoDetails(userName, repositoryName)
+                .map(new Function<GitHubUserRepo, UserRepository>() {
+                    @Override
+                    public UserRepository apply(GitHubUserRepo gitHubUserRepo) throws Exception {
+
+                        final User user = new User();
+                        if (gitHubUserRepo.getGitHubUser() != null) {
+
+                            user.setUserId(gitHubUserRepo.getGitHubUser().getUserId());
+                            user.setUserName(gitHubUserRepo.getGitHubUser().getUserName());
+                            user.setUserAvatar(gitHubUserRepo.getGitHubUser().getUserAvatar());
+                        }
+
+                        final UserRepository userRepository = new UserRepository();
+                        userRepository.setRepoId(gitHubUserRepo.getRepoId());
+                        userRepository.setRepoName(gitHubUserRepo.getRepoName());
+                        userRepository.setRepoFullName(gitHubUserRepo.getRepoFullName());
+                        userRepository.setUser(user);
+
+                        return userRepository;
+                    }
+                });
+    }
+
+    @Override
     public Maybe<UserRepositories> getCachedRepositories() {
         return localStorageRepository.getUserRepositoriesFromCache();
     }

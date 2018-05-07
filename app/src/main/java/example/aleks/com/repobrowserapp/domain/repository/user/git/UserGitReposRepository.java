@@ -26,4 +26,9 @@ public class UserGitReposRepository implements IUserGitReposRepository {
     public Single<List<GitHubUserRepo>> getUserRepositories() {
         return gitHubRepositoriesController.getUserRepositories();
     }
+
+    @Override
+    public Single<GitHubUserRepo> getUserRepoDetails(String userName, String repoName) {
+        return gitHubRepositoriesController.getRepo(userName, repoName);
+    }
 }

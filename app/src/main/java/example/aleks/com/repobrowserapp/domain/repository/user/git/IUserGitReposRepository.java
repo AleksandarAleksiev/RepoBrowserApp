@@ -12,4 +12,6 @@ import io.reactivex.Single;
 public interface IUserGitReposRepository {
 
     Single<List<GitHubUserRepo>> getUserRepositories();
+
+    Single<GitHubUserRepo> getUserRepoDetails(String userName, String repoName);
 }
