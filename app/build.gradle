@@ -10,11 +10,11 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "LOGIN_URL", "\"https://github.com/login/oauth/authorize\""
         buildConfigField "String", "CLIENT_ID", "\"7b699a882ad401342db7\""
         buildConfigField "String", "CLIENT_SECRET", "\"758d0be63374382fde7e5dbe3146d273eafe385a\""
         buildConfigField "String", "REDIRECT_URI", "\"repobrowse://callback\""
-        buildConfigField "String", "BASEURL", "\"https://api.github.com/\""
+        buildConfigField "String", "AUTH_BASEURL", "\"https://github.com/\""
+        buildConfigField "String", "API_BASEURL", "\"https://api.github.com/\""
         buildConfigField "int", "CACHETIME", "600"
     }
     buildTypes {

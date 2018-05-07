@@ -1,6 +1,12 @@
 package example.aleks.com.repobrowserapp.domain.repository.user.git;
 
+import java.util.List;
+
 import javax.inject.Inject;
+
+import example.aleks.com.repobrowserapp.api.GitHubRepositoriesController;
+import example.aleks.com.repobrowserapp.api.model.GitHubUserRepo;
+import io.reactivex.Single;
 
 /**
  * Created by aleks on 06/05/2018.
@@ -8,8 +14,16 @@ import javax.inject.Inject;
 
 public class UserGitReposRepository implements IUserGitReposRepository {
 
-    @Inject
-    public UserGitReposRepository() {
+    private final GitHubRepositoriesController gitHubRepositoriesController;
 
+    @Inject
+    public UserGitReposRepository(GitHubRepositoriesController gitHubRepositoriesController) {
+
+        this.gitHubRepositoriesController = gitHubRepositoriesController;
+    }
+
+    @Override
+    public Single<List<GitHubUserRepo>> getUserRepositories() {
+        return gitHubRepositoriesController.getUserRepositories();
     }
 }

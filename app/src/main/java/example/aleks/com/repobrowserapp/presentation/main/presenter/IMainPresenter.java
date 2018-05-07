@@ -8,5 +8,5 @@ import example.aleks.com.repobrowserapp.presentation.mvp.IBasePresenter;
 
 public interface IMainPresenter extends IBasePresenter {
 
-    void start(String authCode);
+    void start(String authCode, String state);
 }

@@ -1,15 +1,17 @@
-package example.aleks.com.repobrowserapp.domain.repository.user.git;
+package example.aleks.com.repobrowserapp.api;
 
 import java.util.List;
 
 import example.aleks.com.repobrowserapp.api.model.GitHubUserRepo;
 import io.reactivex.Single;
+import retrofit2.http.GET;
 
 /**
- * Created by aleks on 06/05/2018.
+ * Created by aleks on 07/05/2018.
  */
 
-public interface IUserGitReposRepository {
+public interface GitHubRepositoriesController {
 
+    @GET("user/repos")
     Single<List<GitHubUserRepo>> getUserRepositories();
 }

@@ -19,6 +19,8 @@ import example.aleks.com.repobrowserapp.domain.repository.authenticate.Authentic
 import example.aleks.com.repobrowserapp.domain.repository.authenticate.IAuthenticateRepository;
 import example.aleks.com.repobrowserapp.domain.repository.local.storage.ILocalStorageRepository;
 import example.aleks.com.repobrowserapp.domain.repository.local.storage.LocalStorageRepository;
+import example.aleks.com.repobrowserapp.domain.repository.user.git.IUserGitReposRepository;
+import example.aleks.com.repobrowserapp.domain.repository.user.git.UserGitReposRepository;
 import example.aleks.com.repobrowserapp.presentation.model.ViewModelFactory;
 import example.aleks.com.repobrowserapp.utils.ISchedulersProvider;
 import example.aleks.com.repobrowserapp.utils.SchedulersProvider;
@@ -55,6 +57,12 @@ public class AppModule {
     IAuthenticateInteractor providesAuthenticateInteractor(AuthenticateInteractor authenticateInteractor) {
 
         return authenticateInteractor;
+    }
+
+    @Provides
+    IUserGitReposRepository providesUserGitReposRepository(UserGitReposRepository userGitReposRepository) {
+
+        return userGitReposRepository;
     }
 
     @Provides

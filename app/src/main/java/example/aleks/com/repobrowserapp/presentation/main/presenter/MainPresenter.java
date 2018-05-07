@@ -1,5 +1,6 @@
 package example.aleks.com.repobrowserapp.presentation.main.presenter;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
@@ -42,7 +43,7 @@ public class MainPresenter extends BasePresenter implements IMainPresenter {
     //region IMainPresenter implementation
 
     @Override
-    public void start(@Nullable String authCode) {
+    public void start(@Nullable String authCode, @Nullable String state) {
 
         mainView.loading(true);
 
@@ -51,7 +52,7 @@ public class MainPresenter extends BasePresenter implements IMainPresenter {
             login();
         } else {
 
-            validateAuthCode(authCode);
+            validateAuthCode(authCode, state);
         }
     }
 
@@ -90,10 +91,10 @@ public class MainPresenter extends BasePresenter implements IMainPresenter {
         add(dispoable);
     }
 
-    private void validateAuthCode(String authCode) {
+    private void validateAuthCode(@NonNull String authCode, @NonNull String state) {
 
         mainView.loading(true);
-        final Disposable dispoable = authenticateInteractor.requestUserAuthToken(authCode)
+        final Disposable dispoable = authenticateInteractor.requestUserAuthToken(authCode, state)
                 .subscribeOn(schedulersProvider.ioScheduler())
                 .observeOn(schedulersProvider.uiScheduler())
                 .subscribe(new Consumer<String>() {

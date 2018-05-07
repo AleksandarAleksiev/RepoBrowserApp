@@ -11,5 +11,5 @@ public interface IAuthenticateInteractor {
 
     Maybe<String> getUserAuthToken();
 
-    Single<String> requestUserAuthToken(String authCode);
+    Single<String> requestUserAuthToken(String authCode, String state);
 }

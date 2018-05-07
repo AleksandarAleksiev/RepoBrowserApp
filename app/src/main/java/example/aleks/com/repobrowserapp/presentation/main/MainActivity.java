@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import java.util.UUID;
+
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
@@ -12,6 +14,7 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 import example.aleks.com.repobrowserapp.BuildConfig;
 import example.aleks.com.repobrowserapp.R;
+import example.aleks.com.repobrowserapp.domain.repository.user.git.IUserGitReposRepository;
 import example.aleks.com.repobrowserapp.presentation.base.BaseActivity;
 import example.aleks.com.repobrowserapp.presentation.main.presenter.IMainPresenter;
 
@@ -23,6 +26,9 @@ public class MainActivity extends BaseActivity implements HasSupportFragmentInje
 
     @Inject
     public IMainPresenter mainPresenter;
+
+    @Inject
+    public IUserGitReposRepository test;
     //endregion
 
     //region activity methods
@@ -59,8 +65,8 @@ public class MainActivity extends BaseActivity implements HasSupportFragmentInje
     @Override
     public void login() {
 
-        final String loginUrl = String.format("%s?client_id=%s&scope=repo&redirect_uri=",
-                BuildConfig.LOGIN_URL, BuildConfig.CLIENT_ID, BuildConfig.REDIRECT_URI);
+        final String loginUrl = String.format("%slogin/oauth/authorize?client_id=%s&scope=repo&redirect_uri=%s&state=%s",
+                BuildConfig.AUTH_BASEURL, BuildConfig.CLIENT_ID, BuildConfig.REDIRECT_URI, UUID.randomUUID().toString());
         final Intent loginIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(loginUrl));
         startActivity(loginIntent);
     }
@@ -85,6 +91,7 @@ public class MainActivity extends BaseActivity implements HasSupportFragmentInje
     private void validateUserAuthCode() {
 
         String authCode = null;
+        String state = null;
         final Intent intent = getIntent();
         if (intent != null && intent.getData() != null) {
 
@@ -92,10 +99,11 @@ public class MainActivity extends BaseActivity implements HasSupportFragmentInje
             if (callbackUri.toString().startsWith(BuildConfig.REDIRECT_URI)) {
 
                 authCode = callbackUri.getQueryParameter("code");
+                state = callbackUri.getQueryParameter("state");
             }
         }
 
-        mainPresenter.start(authCode);
+        mainPresenter.start(authCode, state);
     }
     //endregion
 }
