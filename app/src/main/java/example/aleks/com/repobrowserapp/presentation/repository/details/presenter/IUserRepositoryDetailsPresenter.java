@@ -7,4 +7,5 @@ import example.aleks.com.repobrowserapp.presentation.mvp.IBasePresenter;
  */
 
 public interface IUserRepositoryDetailsPresenter extends IBasePresenter {
+    void getDetails(String ownerName, String repositoryName);
 }

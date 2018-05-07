@@ -5,4 +5,7 @@ package example.aleks.com.repobrowserapp.presentation.repository.details;
  */
 
 public interface IUserRepositoryDetailsView {
+
+    void loading(boolean loading);
+    void update(String repositoryTitle, String ownerAvatar, String repositoryLanguage);
 }

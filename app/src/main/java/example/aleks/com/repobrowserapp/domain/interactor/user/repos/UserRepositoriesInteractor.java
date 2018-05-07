@@ -1,5 +1,7 @@
 package example.aleks.com.repobrowserapp.domain.interactor.user.repos;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,21 +51,7 @@ public class UserRepositoriesInteractor implements IUserRepositoriesInteractor {
                     @Override
                     public UserRepository apply(GitHubUserRepo gitHubUserRepo) throws Exception {
 
-                        final User user = new User();
-                        if (gitHubUserRepo.getGitHubUser() != null) {
-
-                            user.setUserId(gitHubUserRepo.getGitHubUser().getUserId());
-                            user.setUserName(gitHubUserRepo.getGitHubUser().getUserName());
-                            user.setUserAvatar(gitHubUserRepo.getGitHubUser().getUserAvatar());
-                        }
-
-                        final UserRepository userRepository = new UserRepository();
-                        userRepository.setRepoId(gitHubUserRepo.getRepoId());
-                        userRepository.setRepoName(gitHubUserRepo.getRepoName());
-                        userRepository.setRepoFullName(gitHubUserRepo.getRepoFullName());
-                        userRepository.setUser(user);
-
-                        return userRepository;
+                        return createFrom(gitHubUserRepo);
                     }
                 });
     }
@@ -111,20 +99,7 @@ public class UserRepositoriesInteractor implements IUserRepositoriesInteractor {
 
                             if (gitHubUserRepo != null) {
 
-                                final User user = new User();
-                                if (gitHubUserRepo.getGitHubUser() != null) {
-
-                                    user.setUserId(gitHubUserRepo.getGitHubUser().getUserId());
-                                    user.setUserName(gitHubUserRepo.getGitHubUser().getUserName());
-                                    user.setUserAvatar(gitHubUserRepo.getGitHubUser().getUserAvatar());
-                                }
-
-                                final UserRepository userRepository = new UserRepository();
-                                userRepository.setRepoId(gitHubUserRepo.getRepoId());
-                                userRepository.setRepoName(gitHubUserRepo.getRepoName());
-                                userRepository.setRepoFullName(gitHubUserRepo.getRepoFullName());
-                                userRepository.setUser(user);
-                                repositories.add(userRepository);
+                                repositories.add(createFrom(gitHubUserRepo));
                             }
                         }
                         final UserRepositories userRepositories = new UserRepositories();
@@ -135,5 +110,25 @@ public class UserRepositoriesInteractor implements IUserRepositoriesInteractor {
                 });
     }
 
+    @NonNull
+    private UserRepository createFrom(@NonNull GitHubUserRepo gitHubUserRepo) {
+
+        final User user = new User();
+        if (gitHubUserRepo.getGitHubUser() != null) {
+
+            user.setUserId(gitHubUserRepo.getGitHubUser().getUserId());
+            user.setUserName(gitHubUserRepo.getGitHubUser().getUserName());
+            user.setUserAvatar(gitHubUserRepo.getGitHubUser().getUserAvatar());
+        }
+
+        final UserRepository userRepository = new UserRepository();
+        userRepository.setRepoId(gitHubUserRepo.getRepoId());
+        userRepository.setRepoName(gitHubUserRepo.getRepoName());
+        userRepository.setRepoFullName(gitHubUserRepo.getRepoFullName());
+        userRepository.setLanguage(gitHubUserRepo.getLanguage());
+        userRepository.setUser(user);
+
+        return userRepository;
+    }
     //endregion
 }

@@ -11,11 +11,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import example.aleks.com.repobrowserapp.R;
+import example.aleks.com.repobrowserapp.presentation.main.IMainNavigator;
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.model.RepositoryItem;
-import example.aleks.com.repobrowserapp.presentation.user.repoistories.model.UserRepositoriesViewModel;
 
 /**
  * Created by aleks on 07/05/2018.
@@ -23,12 +26,12 @@ import example.aleks.com.repobrowserapp.presentation.user.repoistories.model.Use
 
 public class UserRepositoriesAdapter extends RecyclerView.Adapter<UserRepositoriesAdapter.RepositoryViewHolder> {
 
-    private final UserRepositoriesViewModel userRepositoriesViewModel;
+    private final List<RepositoryItem> repositoryItems = new ArrayList<>();
+    private final IMainNavigator mainNavigator;
 
     @Inject
-    public UserRepositoriesAdapter(UserRepositoriesViewModel userRepositoriesViewModel) {
-
-        this.userRepositoriesViewModel = userRepositoriesViewModel;
+    public UserRepositoriesAdapter(IMainNavigator mainNavigator) {
+        this.mainNavigator = mainNavigator;
     }
 
     @NonNull
@@ -46,8 +49,8 @@ public class UserRepositoriesAdapter extends RecyclerView.Adapter<UserRepositori
                 final int position = viewHolder.getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
 
-                    final RepositoryItem repositoryItem = userRepositoriesViewModel.getRepositoryItem().get(position);
-                    userRepositoriesViewModel.viewRepoDetails(repositoryItem);
+                    final RepositoryItem repositoryItem = repositoryItems.get(position);
+                    mainNavigator.showRepositoryDetails(repositoryItem.getOwnerName(), repositoryItem.getRepositoryTitle());
                 }
             }
         });
@@ -58,13 +61,23 @@ public class UserRepositoriesAdapter extends RecyclerView.Adapter<UserRepositori
     @Override
     public void onBindViewHolder(@NonNull RepositoryViewHolder holder, int position) {
 
-        final RepositoryItem repositoryItem = userRepositoriesViewModel.getRepositoryItem().get(position);
+        final RepositoryItem repositoryItem = repositoryItems.get(position);
         holder.bind(repositoryItem);
     }
 
     @Override
     public int getItemCount() {
-        return userRepositoriesViewModel.getRepositoryItem().size();
+        return repositoryItems.size();
+    }
+
+    public void updateRepositoryItems(List<RepositoryItem> userRepositories) {
+
+        repositoryItems.clear();
+        if (userRepositories != null && !userRepositories.isEmpty()) {
+
+            repositoryItems.addAll(userRepositories);
+        }
+        notifyDataSetChanged();
     }
 
     //region ViewHolder

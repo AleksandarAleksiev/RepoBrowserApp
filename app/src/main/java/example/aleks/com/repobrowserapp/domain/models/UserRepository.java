@@ -68,4 +68,8 @@ public class UserRepository {
     public String getLanguage() {
         return language;
     }
+
+    public String getAvatar() {
+        return getUser() == null ? null : getUser().getUserAvatar();
+    }
 }

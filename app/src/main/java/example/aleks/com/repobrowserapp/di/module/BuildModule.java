@@ -4,7 +4,7 @@ import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import example.aleks.com.repobrowserapp.di.annotation.ActivityScope;
 import example.aleks.com.repobrowserapp.presentation.main.MainActivity;
-import example.aleks.com.repobrowserapp.presentation.main.di.MainActivityModule;
+import example.aleks.com.repobrowserapp.presentation.repository.details.di.UserRepositoryDetailsFragmentModule;
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.di.UserRepositoriesFragmentModule;
 
 /**
@@ -14,7 +14,9 @@ import example.aleks.com.repobrowserapp.presentation.user.repoistories.di.UserRe
 @Module
 public abstract class BuildModule {
 
-    @ContributesAndroidInjector(modules = {MainActivityModule.class, UserRepositoriesFragmentModule.class})
+    @ContributesAndroidInjector(modules = {ActivityModule.class,
+            UserRepositoriesFragmentModule.class,
+            UserRepositoryDetailsFragmentModule.class})
     @ActivityScope
     public abstract MainActivity bindsMainActivity();
 }

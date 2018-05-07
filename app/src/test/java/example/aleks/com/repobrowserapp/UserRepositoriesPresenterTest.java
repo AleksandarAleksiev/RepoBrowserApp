@@ -23,7 +23,6 @@ import example.aleks.com.repobrowserapp.domain.repository.local.storage.ILocalSt
 import example.aleks.com.repobrowserapp.domain.repository.user.git.IUserGitReposRepository;
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.IUserRepositoriesView;
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.model.RepositoryItem;
-import example.aleks.com.repobrowserapp.presentation.user.repoistories.model.UserRepositoriesViewModel;
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.presenter.UserRepositoriesPresenter;
 import example.aleks.com.repobrowserapp.utils.ISchedulersProvider;
 import io.reactivex.Single;
@@ -56,13 +55,12 @@ public class UserRepositoriesPresenterTest {
     @InjectMocks
     private UserRepositoriesInteractor userRepositoriesInteractor;
 
-    @InjectMocks
-    private UserRepositoriesViewModel userRepositoriesViewModel;
-
     private final TestScheduler testScheduler = new TestScheduler();
 
     private final UserRepositories cachedItems = new UserRepositories();
     private final List<GitHubUserRepo> serverItems = new ArrayList<>();
+
+    private final List<RepositoryItem> repositoryItems = new ArrayList<>();
 
     @Before
     public void setup() {
@@ -120,8 +118,8 @@ public class UserRepositoriesPresenterTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
 
                 final ArrayList<RepositoryItem> arrayList = invocation.getArgument(0);
-                userRepositoriesViewModel.getRepositoryItem().clear();
-                userRepositoriesViewModel.getRepositoryItem().addAll(arrayList);
+                repositoryItems.clear();
+                repositoryItems.addAll(arrayList);
                 return null;
             }
         }).when(repositoriesView).update(Mockito.<RepositoryItem>anyList());
@@ -129,7 +127,7 @@ public class UserRepositoriesPresenterTest {
         userRepositoriesPresenter.loadUserRepositories(false);
         testScheduler.triggerActions();
 
-        final RepositoryItem repositoryItem = userRepositoriesViewModel.getRepositoryItem().get(0);
+        final RepositoryItem repositoryItem = repositoryItems.get(0);
 
         Assert.assertNotNull(repositoryItem);
     }
@@ -151,8 +149,8 @@ public class UserRepositoriesPresenterTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
 
                 final ArrayList<RepositoryItem> arrayList = invocation.getArgument(0);
-                userRepositoriesViewModel.getRepositoryItem().clear();
-                userRepositoriesViewModel.getRepositoryItem().addAll(arrayList);
+                repositoryItems.clear();
+                repositoryItems.addAll(arrayList);
                 return null;
             }
         }).when(repositoriesView).update(Mockito.<RepositoryItem>anyList());
@@ -160,7 +158,7 @@ public class UserRepositoriesPresenterTest {
         userRepositoriesPresenter.loadUserRepositories(false);
         testScheduler.triggerActions();
 
-        final RepositoryItem repositoryItem = userRepositoriesViewModel.getRepositoryItem().get(0);
+        final RepositoryItem repositoryItem = repositoryItems.get(0);
 
         Assert.assertEquals("Item not loaded from cache", "CACHE",repositoryItem.getRepositoryTitle());
     }
@@ -208,8 +206,8 @@ public class UserRepositoriesPresenterTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
 
                 final ArrayList<RepositoryItem> arrayList = invocation.getArgument(0);
-                userRepositoriesViewModel.getRepositoryItem().clear();
-                userRepositoriesViewModel.getRepositoryItem().addAll(arrayList);
+                repositoryItems.clear();
+                repositoryItems.addAll(arrayList);
                 return null;
             }
         }).when(repositoriesView).update(Mockito.<RepositoryItem>anyList());
@@ -217,7 +215,7 @@ public class UserRepositoriesPresenterTest {
         userRepositoriesPresenter.loadUserRepositories(true);
         testScheduler.triggerActions();
 
-        final RepositoryItem repositoryItem = userRepositoriesViewModel.getRepositoryItem().get(0);
+        final RepositoryItem repositoryItem = repositoryItems.get(0);
 
         Assert.assertEquals("Item not loaded from cache", "SERVER",repositoryItem.getRepositoryTitle());
     }
@@ -265,8 +263,8 @@ public class UserRepositoriesPresenterTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
 
                 final ArrayList<RepositoryItem> arrayList = invocation.getArgument(0);
-                userRepositoriesViewModel.getRepositoryItem().clear();
-                userRepositoriesViewModel.getRepositoryItem().addAll(arrayList);
+                repositoryItems.clear();
+                repositoryItems.addAll(arrayList);
                 return null;
             }
         }).when(repositoriesView).update(Mockito.<RepositoryItem>anyList());
@@ -274,7 +272,7 @@ public class UserRepositoriesPresenterTest {
         userRepositoriesPresenter.loadUserRepositories(false);
         testScheduler.triggerActions();
 
-        final RepositoryItem repositoryItem = userRepositoriesViewModel.getRepositoryItem().get(0);
+        final RepositoryItem repositoryItem = repositoryItems.get(0);
 
         Assert.assertEquals("Item not loaded from cache", "SERVER",repositoryItem.getRepositoryTitle());
     }
@@ -296,8 +294,8 @@ public class UserRepositoriesPresenterTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
 
                 final ArrayList<RepositoryItem> arrayList = invocation.getArgument(0);
-                userRepositoriesViewModel.getRepositoryItem().clear();
-                userRepositoriesViewModel.getRepositoryItem().addAll(arrayList);
+                repositoryItems.clear();
+                repositoryItems.addAll(arrayList);
                 return null;
             }
         }).when(repositoriesView).update(Mockito.<RepositoryItem>anyList());
@@ -355,8 +353,8 @@ public class UserRepositoriesPresenterTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
 
                 final ArrayList<RepositoryItem> arrayList = invocation.getArgument(0);
-                userRepositoriesViewModel.getRepositoryItem().clear();
-                userRepositoriesViewModel.getRepositoryItem().addAll(arrayList);
+                repositoryItems.clear();
+                repositoryItems.addAll(arrayList);
                 return null;
             }
         }).when(repositoriesView).update(Mockito.<RepositoryItem>anyList());
@@ -415,8 +413,8 @@ public class UserRepositoriesPresenterTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
 
                 final ArrayList<RepositoryItem> arrayList = invocation.getArgument(0);
-                userRepositoriesViewModel.getRepositoryItem().clear();
-                userRepositoriesViewModel.getRepositoryItem().addAll(arrayList);
+                repositoryItems.clear();
+                repositoryItems.addAll(arrayList);
                 return null;
             }
         }).when(repositoriesView).update(Mockito.<RepositoryItem>anyList());

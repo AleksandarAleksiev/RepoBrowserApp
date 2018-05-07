@@ -1,6 +1,5 @@
 package example.aleks.com.repobrowserapp.di.module;
 
-import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -15,13 +14,14 @@ import example.aleks.com.repobrowserapp.RepoBrowserApp;
 import example.aleks.com.repobrowserapp.di.annotation.AppContext;
 import example.aleks.com.repobrowserapp.domain.interactor.authenticate.AuthenticateInteractor;
 import example.aleks.com.repobrowserapp.domain.interactor.authenticate.IAuthenticateInteractor;
+import example.aleks.com.repobrowserapp.domain.interactor.user.repos.IUserRepositoriesInteractor;
+import example.aleks.com.repobrowserapp.domain.interactor.user.repos.UserRepositoriesInteractor;
 import example.aleks.com.repobrowserapp.domain.repository.authenticate.AuthenticateRepository;
 import example.aleks.com.repobrowserapp.domain.repository.authenticate.IAuthenticateRepository;
 import example.aleks.com.repobrowserapp.domain.repository.local.storage.ILocalStorageRepository;
 import example.aleks.com.repobrowserapp.domain.repository.local.storage.LocalStorageRepository;
 import example.aleks.com.repobrowserapp.domain.repository.user.git.IUserGitReposRepository;
 import example.aleks.com.repobrowserapp.domain.repository.user.git.UserGitReposRepository;
-import example.aleks.com.repobrowserapp.presentation.model.ViewModelFactory;
 import example.aleks.com.repobrowserapp.utils.ISchedulersProvider;
 import example.aleks.com.repobrowserapp.utils.SchedulersProvider;
 
@@ -66,14 +66,20 @@ public class AppModule {
     }
 
     @Provides
-    ViewModelProvider.Factory providesViewModelProviderFactory(ViewModelFactory viewModelFactory) {
-
-        return viewModelFactory;
-    }
-
-    @Provides
     ISchedulersProvider providesSchedulersProvider(SchedulersProvider schedulersProvider) {
 
         return schedulersProvider;
+    }
+
+    @Provides
+    IUserGitReposRepository providesUserGitReposRepository(UserGitReposRepository userGitReposRepository) {
+
+        return userGitReposRepository;
+    }
+
+    @Provides
+    public IUserRepositoriesInteractor providesUserRepositoriesInteractor(UserRepositoriesInteractor userRepositoriesInteractor) {
+
+        return userRepositoriesInteractor;
     }
 }

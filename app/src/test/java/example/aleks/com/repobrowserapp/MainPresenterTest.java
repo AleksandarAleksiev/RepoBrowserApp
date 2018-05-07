@@ -16,6 +16,8 @@ import io.reactivex.Maybe;
 import io.reactivex.MaybeEmitter;
 import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
 import io.reactivex.schedulers.TestScheduler;
 
 /**
@@ -70,12 +72,12 @@ public class MainPresenterTest {
     @Test
     public void should_Call_Navigator_Show_User_Repos_If_User_Is_Authenticated() {
 
-        Mockito.doReturn(Maybe.create(new MaybeOnSubscribe<String>() {
+        Mockito.doReturn(Single.create(new SingleOnSubscribe<String>() {
             @Override
-            public void subscribe(MaybeEmitter<String> emitter) throws Exception {
+            public void subscribe(SingleEmitter<String> emitter) throws Exception {
                 emitter.onSuccess("FAKE");
             }
-        })).when(authenticateInteractor).getUserAuthToken();
+        })).when(authenticateInteractor).requestUserAuthToken(Mockito.anyString(), Mockito.anyString());
         mainPresenter.start("FAKE", "CODE");
         testScheduler.triggerActions();
 

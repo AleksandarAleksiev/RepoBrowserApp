@@ -1,7 +1,8 @@
 package example.aleks.com.repobrowserapp.presentation.user.repoistories;
 
 
-import android.arch.lifecycle.ViewModelProviders;
+import android.arch.lifecycle.ViewModelProvider;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,12 +17,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.android.support.AndroidSupportInjection;
 import example.aleks.com.repobrowserapp.R;
 import example.aleks.com.repobrowserapp.presentation.base.BaseFragment;
-import example.aleks.com.repobrowserapp.presentation.model.ViewModelFactory;
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.adapter.UserRepositoriesAdapter;
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.model.RepositoryItem;
-import example.aleks.com.repobrowserapp.presentation.user.repoistories.model.UserRepositoriesViewModel;
+import example.aleks.com.repobrowserapp.presentation.user.repoistories.presenter.IUserRepositoriesPresenter;
 import example.aleks.com.repobrowserapp.utils.RecyclerViewItemsSpaceDecoration;
 
 /**
@@ -33,12 +34,10 @@ public class UserRepositoriesFragment extends BaseFragment implements IUserRepos
     public static final String TAG = UserRepositoriesFragment.class.getSimpleName();
 
     @Inject
-    ViewModelFactory viewModelFactory;
-
-    @Inject
     UserRepositoriesAdapter userRepositoriesAdapter;
 
-    private UserRepositoriesViewModel userRepositoriesViewModel;
+    @Inject
+    IUserRepositoriesPresenter userRepositoriesPresenter;
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
@@ -56,11 +55,16 @@ public class UserRepositoriesFragment extends BaseFragment implements IUserRepos
 
     //region fragment methods
 
+
+    @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        userRepositoriesViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserRepositoriesViewModel.class);
     }
 
     @Override
@@ -77,7 +81,7 @@ public class UserRepositoriesFragment extends BaseFragment implements IUserRepos
             @Override
             public void onRefresh() {
 
-                userRepositoriesViewModel.loadUserRepositories(true);
+                userRepositoriesPresenter.loadUserRepositories(true);
             }
         });
 
@@ -94,14 +98,14 @@ public class UserRepositoriesFragment extends BaseFragment implements IUserRepos
     public void onResume() {
         super.onResume();
 
-        userRepositoriesViewModel.loadUserRepositories(false);
+        userRepositoriesPresenter.loadUserRepositories(false);
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        userRepositoriesViewModel.dispose();
+        userRepositoriesPresenter.dispose();
     }
 
     //endregion
@@ -117,9 +121,7 @@ public class UserRepositoriesFragment extends BaseFragment implements IUserRepos
     @Override
     public void update(List<RepositoryItem> userRepositories) {
 
-        userRepositoriesViewModel.getRepositoryItem().clear();
-        userRepositoriesViewModel.getRepositoryItem().addAll(userRepositories);
-        userRepositoriesAdapter.notifyDataSetChanged();
+        userRepositoriesAdapter.updateRepositoryItems(userRepositories);
     }
 
     //endregion

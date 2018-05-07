@@ -99,7 +99,7 @@ public class MainActivity extends BaseActivity implements HasSupportFragmentInje
             userRepositoryDetails = UserRepositoryDetailsFragment.newInstance(ownerName, repositoryName);
         }
 
-        showScreen(userRepositoryDetails, UserRepositoriesFragment.TAG, true, true);
+        showScreen(userRepositoryDetails, UserRepositoryDetailsFragment.TAG, true, true);
     }
 
     //endregion

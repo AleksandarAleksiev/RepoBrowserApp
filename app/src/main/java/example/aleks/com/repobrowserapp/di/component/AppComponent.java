@@ -15,7 +15,10 @@ import example.aleks.com.repobrowserapp.di.module.NetworkModule;
  */
 
 @Singleton
-@Component(modules = {AndroidSupportInjectionModule.class, AppModule.class, NetworkModule.class, BuildModule.class})
+@Component(modules = {AndroidSupportInjectionModule.class,
+        AppModule.class,
+        NetworkModule.class,
+        BuildModule.class})
 public interface AppComponent {
 
     @Component.Builder

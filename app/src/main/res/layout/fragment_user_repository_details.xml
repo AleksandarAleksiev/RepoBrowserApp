@@ -31,6 +31,7 @@
                     android:id="@+id/repositoryTitleTextView"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:layout_margin="10dp"
                     style="@style/TitleStyle"
                     android:gravity="center"
                     app:autoSizeMinTextSize="@dimen/min_title_text_size"
@@ -39,6 +40,23 @@
                     app:layout_constraintStart_toEndOf="@+id/ownerAvatarImageView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/topHorizontalGuideline"
+                    app:layout_constraintDimensionRatio="H,5:1"
+                    tools:text="@tools:sample/full_names"/>
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/repositoryLanguageTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_margin="10dp"
+                    style="@style/DescriptionStyle"
+                    android:gravity="end|bottom"
+                    app:autoSizeMinTextSize="@dimen/min_description_text_size"
+                    app:autoSizeMaxTextSize="@dimen/max_description_text_size"
+                    app:autoSizeTextType="uniform"
+                    app:layout_constraintStart_toStartOf="@+id/repositoryTitleTextView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/repositoryTitleTextView"
+                    app:layout_constraintBottom_toBottomOf="@+id/ownerAvatarImageView"
                     app:layout_constraintDimensionRatio="H,5:1"
                     tools:text="@tools:sample/full_names"/>
 
