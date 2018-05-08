@@ -1,5 +1,6 @@
 package example.aleks.com.repobrowserapp.di.module;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -22,8 +23,9 @@ import example.aleks.com.repobrowserapp.domain.repository.local.storage.ILocalSt
 import example.aleks.com.repobrowserapp.domain.repository.local.storage.LocalStorageRepository;
 import example.aleks.com.repobrowserapp.domain.repository.user.git.IUserGitReposRepository;
 import example.aleks.com.repobrowserapp.domain.repository.user.git.UserGitReposRepository;
-import example.aleks.com.repobrowserapp.utils.ISchedulersProvider;
-import example.aleks.com.repobrowserapp.utils.SchedulersProvider;
+import example.aleks.com.repobrowserapp.presentation.base.ViewModelFactory;
+import example.aleks.com.repobrowserapp.utils.scheduler.ISchedulersProvider;
+import example.aleks.com.repobrowserapp.utils.scheduler.SchedulersProvider;
 
 /**
  * Created by aleks on 05/05/2018.
@@ -81,5 +83,11 @@ public class AppModule {
     public IUserRepositoriesInteractor providesUserRepositoriesInteractor(UserRepositoriesInteractor userRepositoriesInteractor) {
 
         return userRepositoriesInteractor;
+    }
+
+    @Provides
+    public ViewModelProvider.Factory providesViewModelFactory(ViewModelFactory viewModelFactory) {
+
+        return viewModelFactory;
     }
 }

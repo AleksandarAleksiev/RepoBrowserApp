@@ -1,7 +1,6 @@
 package example.aleks.com.repobrowserapp.presentation.user.repoistories;
 
 
-import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;

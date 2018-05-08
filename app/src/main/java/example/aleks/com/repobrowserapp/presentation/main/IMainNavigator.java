@@ -9,4 +9,6 @@ public interface IMainNavigator {
     void showUserGitRepos();
 
     void showRepositoryDetails(String ownerName, String repositoryName);
+
+    void showLoginScreen();
 }

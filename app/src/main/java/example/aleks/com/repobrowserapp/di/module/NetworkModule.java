@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Singleton;
@@ -63,35 +61,14 @@ public class NetworkModule {
 
                         final Request original = chain.request();
                         final Request.Builder reqBuilder = original.newBuilder()
-                                .header("Content-Type", "application/json")
-                                .header("Accept", "application/vnd.github.v3+json");
+                                .header("Content-Type", "application/json");
 
                         if (authToken.getAccessToken() != null && !authToken.getAccessToken().isEmpty()) {
                             reqBuilder.header("Authorization", "token " + authToken.getAccessToken());
                         }
 
                         final Request request = reqBuilder.build();
-                        final Response response = chain.proceed(request);
-
-//                        String responseData = null;
-//                        try {
-//
-//                            Map<String, String> headersMapMap = new HashMap<>();
-//                            for (int index = 0; index < response.headers().size(); index++) {
-//
-//                                final String headerName = response.headers().name(index);
-//                                final String headerValue = response.headers().value(index);
-//                                headersMapMap.put(headerName, headerValue);
-//                            }
-//                            responseData = new String(response.body().bytes(), parseCharset(headersMapMap));
-//                            String jsonResult = responseData;
-//
-//                        } catch (UnsupportedEncodingException e) {
-//
-//                            e.printStackTrace();
-//                        }
-
-                        return response;
+                        return chain.proceed(request);
                     }
                 })
                 .cache(cache)
@@ -105,7 +82,7 @@ public class NetworkModule {
     GitHubAuthController providesGitHubClient(OkHttpClient okHttpClient) {
 
         final Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BuildConfig.API_BASEURL)
+                .baseUrl(BuildConfig.AUTH_BASEURL)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

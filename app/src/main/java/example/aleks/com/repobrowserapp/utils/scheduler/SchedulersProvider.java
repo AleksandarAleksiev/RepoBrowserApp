@@ -1,7 +1,8 @@
-package example.aleks.com.repobrowserapp.utils;
+package example.aleks.com.repobrowserapp.utils.scheduler;
 
 import javax.inject.Inject;
 
+import example.aleks.com.repobrowserapp.utils.scheduler.ISchedulersProvider;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;

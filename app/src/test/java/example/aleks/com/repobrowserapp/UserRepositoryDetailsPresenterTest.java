@@ -6,17 +6,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import example.aleks.com.repobrowserapp.domain.interactor.user.repos.IUserRepositoriesInteractor;
 import example.aleks.com.repobrowserapp.domain.models.User;
-import example.aleks.com.repobrowserapp.domain.models.UserRepositories;
 import example.aleks.com.repobrowserapp.domain.models.UserRepository;
 import example.aleks.com.repobrowserapp.presentation.repository.details.IUserRepositoryDetailsView;
 import example.aleks.com.repobrowserapp.presentation.repository.details.presenter.UserRepositoryDetailsPresenter;
-import example.aleks.com.repobrowserapp.presentation.user.repoistories.model.RepositoryItem;
-import example.aleks.com.repobrowserapp.utils.ISchedulersProvider;
+import example.aleks.com.repobrowserapp.utils.scheduler.ISchedulersProvider;
 import io.reactivex.Single;
 import io.reactivex.schedulers.TestScheduler;
 

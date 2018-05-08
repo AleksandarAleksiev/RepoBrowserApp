@@ -9,9 +9,8 @@ import org.mockito.MockitoAnnotations;
 
 import example.aleks.com.repobrowserapp.domain.interactor.authenticate.IAuthenticateInteractor;
 import example.aleks.com.repobrowserapp.presentation.main.IMainNavigator;
-import example.aleks.com.repobrowserapp.presentation.main.IMainView;
-import example.aleks.com.repobrowserapp.presentation.main.presenter.MainPresenter;
-import example.aleks.com.repobrowserapp.utils.ISchedulersProvider;
+import example.aleks.com.repobrowserapp.presentation.main.MainViewModel;
+import example.aleks.com.repobrowserapp.utils.scheduler.ISchedulersProvider;
 import io.reactivex.Maybe;
 import io.reactivex.MaybeEmitter;
 import io.reactivex.MaybeOnSubscribe;
@@ -24,10 +23,7 @@ import io.reactivex.schedulers.TestScheduler;
  * Created by aleks on 06/05/2018.
  */
 
-public class MainPresenterTest {
-
-    @Mock
-    private IMainView mainView;
+public class MainViewModelTest {
 
     @Mock
     private IAuthenticateInteractor authenticateInteractor;
@@ -39,7 +35,7 @@ public class MainPresenterTest {
     private ISchedulersProvider schedulersProvider;
 
     @InjectMocks
-    private MainPresenter mainPresenter;
+    private MainViewModel mainViewModel;
 
     private final TestScheduler testScheduler = new TestScheduler();
 
@@ -62,10 +58,10 @@ public class MainPresenterTest {
                 emitter.onComplete();
             }
         })).when(authenticateInteractor).getUserAuthToken();
-        mainPresenter.start(null, null);
+        mainViewModel.authorize();
         testScheduler.triggerActions();
 
-        Mockito.verify(mainView, Mockito.times(1)).login();
+        Mockito.verify(mainNavigator, Mockito.times(1)).showLoginScreen();
         Mockito.verify(mainNavigator, Mockito.times(0)).showUserGitRepos();
     }
 
@@ -78,10 +74,12 @@ public class MainPresenterTest {
                 emitter.onSuccess("FAKE");
             }
         })).when(authenticateInteractor).requestUserAuthToken(Mockito.anyString(), Mockito.anyString());
-        mainPresenter.start("FAKE", "CODE");
+        mainViewModel.setAuthCode("FAKE");
+        mainViewModel.setAuthState("CODE");
+        mainViewModel.authorize();
         testScheduler.triggerActions();
 
-        Mockito.verify(mainView, Mockito.times(0)).login();
+        Mockito.verify(mainNavigator, Mockito.times(0)).showLoginScreen();
         Mockito.verify(mainNavigator, Mockito.times(1)).showUserGitRepos();
     }
 }

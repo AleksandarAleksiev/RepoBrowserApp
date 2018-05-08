@@ -6,7 +6,7 @@ import example.aleks.com.repobrowserapp.domain.interactor.user.repos.IUserReposi
 import example.aleks.com.repobrowserapp.domain.models.UserRepository;
 import example.aleks.com.repobrowserapp.presentation.mvp.BasePresenter;
 import example.aleks.com.repobrowserapp.presentation.repository.details.IUserRepositoryDetailsView;
-import example.aleks.com.repobrowserapp.utils.ISchedulersProvider;
+import example.aleks.com.repobrowserapp.utils.scheduler.ISchedulersProvider;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 

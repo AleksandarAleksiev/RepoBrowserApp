@@ -1,62 +1,70 @@
-package example.aleks.com.repobrowserapp.presentation.main.presenter;
-
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+package example.aleks.com.repobrowserapp.presentation.main;
 
 import javax.inject.Inject;
 
 import example.aleks.com.repobrowserapp.domain.interactor.authenticate.IAuthenticateInteractor;
-import example.aleks.com.repobrowserapp.presentation.main.IMainNavigator;
-import example.aleks.com.repobrowserapp.presentation.main.IMainView;
-import example.aleks.com.repobrowserapp.presentation.mvp.BasePresenter;
-import example.aleks.com.repobrowserapp.utils.ISchedulersProvider;
+import example.aleks.com.repobrowserapp.presentation.base.BaseViewModel;
+import example.aleks.com.repobrowserapp.utils.scheduler.ISchedulersProvider;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 
 /**
- * Created by aleks on 05/05/2018.
+ * Created by Aleksandar on 7.5.2018 г..
  */
 
-public class MainPresenter extends BasePresenter implements IMainPresenter {
+public class MainViewModel extends BaseViewModel {
 
-    //region properties
-    private final IMainView mainView;
     private final IMainNavigator mainNavigator;
     private final IAuthenticateInteractor authenticateInteractor;
     private final ISchedulersProvider schedulersProvider;
-    //endregion
 
-    //region constructor
+    private String authCode;
+    private String authState;
+    private boolean userIsAuthenticated;
+
     @Inject
-    public MainPresenter(IMainView presenterView,
-                         IMainNavigator navigator,
+    public MainViewModel(IMainNavigator navigator,
                          IAuthenticateInteractor authenticateInteractor,
                          ISchedulersProvider schedulersProvider) {
-        this.mainView = presenterView;
+
         this.mainNavigator = navigator;
         this.authenticateInteractor = authenticateInteractor;
         this.schedulersProvider = schedulersProvider;
     }
-    //endregion
 
-    //region IMainPresenter implementation
+    public String getAuthCode() {
 
-    @Override
-    public void start(@Nullable String authCode, @Nullable String state) {
-
-        mainView.loading(true);
-
-        if (authCode == null || authCode.isEmpty()) {
-
-            login();
-        } else {
-
-            validateAuthCode(authCode, state);
-        }
+        return authCode;
     }
 
-    //endregion
+    public void setAuthCode( String authCode ) {
+
+        this.authCode = authCode;
+    }
+
+    public String getAuthState() {
+
+        return authState;
+    }
+
+    public void setAuthState( String authState ) {
+
+        this.authState = authState;
+    }
+
+    public void authorize() {
+
+        if ( !userIsAuthenticated ) {
+
+            if ( authCode == null || authCode.isEmpty() ) {
+                login();
+            } else {
+
+                requestAuthorizationCode(  );
+            }
+        }
+    }
 
     //region private methods
 
@@ -69,7 +77,7 @@ public class MainPresenter extends BasePresenter implements IMainPresenter {
                     @Override
                     public void accept(String userAuthToken) throws Exception {
 
-                        mainView.loading(false);
+                        userIsAuthenticated = true;
                         mainNavigator.showUserGitRepos();
 
                     }
@@ -77,31 +85,30 @@ public class MainPresenter extends BasePresenter implements IMainPresenter {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
 
-                        mainView.loading(false);
+                        throwable.printStackTrace();
+
                     }
                 }, new Action() {
                     @Override
                     public void run() throws Exception {
 
-                        mainView.loading(false);
-                        mainView.login();
+                        mainNavigator.showLoginScreen();
                     }
                 });
 
         add(dispoable);
     }
 
-    private void validateAuthCode(@NonNull String authCode, @NonNull String state) {
+    private void requestAuthorizationCode() {
 
-        mainView.loading(true);
-        final Disposable dispoable = authenticateInteractor.requestUserAuthToken(authCode, state)
+        final Disposable dispoable = authenticateInteractor.requestUserAuthToken(authCode, authState)
                 .subscribeOn(schedulersProvider.ioScheduler())
                 .observeOn(schedulersProvider.uiScheduler())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String userAuthToken) throws Exception {
 
-                        mainView.loading(false);
+                        userIsAuthenticated = true;
                         mainNavigator.showUserGitRepos();
 
                     }
@@ -109,7 +116,7 @@ public class MainPresenter extends BasePresenter implements IMainPresenter {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
 
-                        mainView.loading(false);
+                        throwable.printStackTrace();
                     }
                 });
 

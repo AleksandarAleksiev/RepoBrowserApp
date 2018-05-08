@@ -1,4 +1,4 @@
-package example.aleks.com.repobrowserapp.utils;
+package example.aleks.com.repobrowserapp.utils.scheduler;
 
 import io.reactivex.Scheduler;
 

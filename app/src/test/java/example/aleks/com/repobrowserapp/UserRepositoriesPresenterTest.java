@@ -24,7 +24,7 @@ import example.aleks.com.repobrowserapp.domain.repository.user.git.IUserGitRepos
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.IUserRepositoriesView;
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.model.RepositoryItem;
 import example.aleks.com.repobrowserapp.presentation.user.repoistories.presenter.UserRepositoriesPresenter;
-import example.aleks.com.repobrowserapp.utils.ISchedulersProvider;
+import example.aleks.com.repobrowserapp.utils.scheduler.ISchedulersProvider;
 import io.reactivex.Single;
 import io.reactivex.schedulers.TestScheduler;
 
